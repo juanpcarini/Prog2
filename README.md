@@ -1,4 +1,4 @@
-<p align="center"> # Programacion 2 </p>
+<h1 align="center">Programacion 2</h1>
 
 ![UNLu](https://www.universidades.com.ar/logos/original/logo-universidad-nacional-de-lujan.png)
 
