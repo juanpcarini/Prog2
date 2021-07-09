@@ -9,12 +9,17 @@ uses
 var
   lista:ListaTAD.Lista;
   E:TipoElemento;
+  EMsg:Errores;
 
 begin
   E.TipoDatoClave('a');
   lista.crear();
   //writeln(lista.esVacia());
-  lista.agregar(E);
+  EMsg := lista.agregar(E);
+  if EMsg = Errores.OK then
+    writeln('Se agrego un elemento a la lista')
+  else
+    writeln('Algo no funco bro');
   lista.eliminar(1);
   readln;
 end.

@@ -61,13 +61,8 @@ implementation
       Qitems:= Qitems+1;
       resultado:= OK;
     end;
+    agregar:=resultado;
   end;
-
-  {
-    Escribi este metodo
-    Anda 11 point
-  }
-
 
   Function Lista.eliminar(p:PosicionLista) : Errores;
     Procedure correrListado(); //(p:posicionLista;f:integer);
