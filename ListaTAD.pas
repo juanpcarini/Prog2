@@ -63,6 +63,10 @@ implementation
     end;
   end;
 
+  {
+    Escribi este metodo
+    Anda 11 point
+  }
 
 
   Function Lista.eliminar(p:PosicionLista) : Errores;
