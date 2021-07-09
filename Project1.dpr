@@ -10,16 +10,22 @@ var
   lista:ListaTAD.Lista;
   E:TipoElemento;
   EMsg:Errores;
-
+  i:integer;
 begin
-  E.TipoDatoClave('a');
+  i:=0;
+  E.Inicializar;
   lista.crear();
-  //writeln(lista.esVacia());
-  EMsg := lista.agregar(E);
-  if EMsg = Errores.OK then
-    writeln('Se agrego un elemento a la lista')
-  else
-    writeln('Algo no funco bro');
-  lista.eliminar(1);
+  for i := 1 to 5 do
+  begin
+    E.DI := 123 + i;
+    EMsg := lista.agregar(E);
+  end;
+
+  {writeln(lista.esVacia());
+    if EMsg = Errores.OK then
+        writeln('Se agrego un elemento a la lista')
+          else
+              writeln('Algo no funco bro');}
+  lista.eliminar(3);
   readln;
 end.

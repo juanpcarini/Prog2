@@ -64,17 +64,17 @@ implementation
     agregar:=resultado;
   end;
 
+
   Function Lista.eliminar(p:PosicionLista) : Errores;
     Procedure correrListado(); //(p:posicionLista;f:integer);
-    //var
-      //i: posicionLista;
+    var
+      i: posicionLista;
     begin
-      //for i := p to f do
-      //begin
-      //  elementos[i]:= elementos[p+1];
-      //  p:=p+1;
-      //end;
-      writeln(p);
+      for i := p to final-1 do
+      begin
+        elementos[i]:= elementos[i+1];
+      end;
+
     end;
 
   var
@@ -87,9 +87,20 @@ implementation
       resultado:= CError
     else
       begin
-        correrListado();
+        if Qitems = 1 then
+        begin
+          correrListado();
+          inicio:= NULO;
+          final:=NULO;
+          Qitems:= Qitems-1;
+        end
+        else
+        begin
+          correrListado();
+          final := final - 1;
+          Qitems:=Qitems-1;
+        end;
         //elementos[p]:=NULO;
-        Qitems:=Qitems-1;
       end;
   end;
 end.

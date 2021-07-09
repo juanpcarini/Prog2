@@ -1,100 +1,175 @@
 unit Tipos;
 
 interface
-  Uses Variants, SysUtils;
 
-Const
-  cTab = Char(9); // Tabulador
-  cCR = Char(13); // Retorno de carro
-  cCRLF= Char(13) + Char(10); // Retorno de Carro + Fin de Linea
-  cLF = Char(10); // Fin de Linea solamente
+uses
+Variants, SysUtils;
 
+const
+cTab=char(9);                     //tabulador
+cCR=char(13);                     //retorno de carro
+cCRLF=char(13)+Char(10);          //retorno de carro y fin de linea
+cLF=char(10);                     //fin de linea
 
-Type
-  // Retorno de errores de los procesos de manejo de estructuras
-  Errores = (OK, CError, LLena, Vacia, PosicionInvalida, Otro, ClaveIncompatible, ClaveDuplicada);
+type
 
-  // Tipos de Datos Soportados x la clave <variant>
-  TipoDatosClave = (Numero, Cadena, Fecha, Otros, Desconocido);
+//Enumerados
 
-  // Tipos de Funcion Hash a Aplicar
-  TipoFuncionesHash = (Modulo, Plegamiento, MitadDelCuadrado);
+//resultado de comparacion
+Comparacion=(igual, menor, mayor, distinto, error);
+//campo por el que comparar o buscar
+CampoComparar=(CDI,CDR,CDS,CDP,CDV,CDIDS,CDIDR);
+//Errores a devolver
+Errores=(OK,CError,Llena,Vacia,PosicionInvalida,Otro);
 
-  // Datos a Guardar dentro de las estructuras
-  TipoElemento = Object
-    Clave: Variant;  // Cualquier valor soportado x <TipoDatosClave>
-    Valor: Pointer;  // Puntero Generico a Cualquier cosa (dato primitivo, otra estructura, un objeto, etc.)
-    // Comportamiento basico del <TipoElemento>
-    Function ArmarString(): String; // Retorno la Clave como un String
-    Function TipoDatoClave(avClave: Variant): TipoDatosClave;  // Valida el tipo de dato de la clave
-    Function TipoElementoVacio(): TipoElemento;  // Creo un <TipoElemento> Vacio
-	  Function EsTEVacio(): Boolean;
-  End;
+TipoElemento=object
+    DI:longint;
+    DR:real;
+    DS:string;
+    DP:pointer;
+    DV:variant;
 
+    procedure Inicializar();
+    function CompararTE(X2:TipoElemento; ComparaPor:CampoComparar):Comparacion;
+    function ArmarString:string;
+    function CargarTE(S:string):boolean;  // carga el elemento a partir de
+                                          // texto separado por TAB
+end;
 
-  // Operaciones del TipoElemento
 implementation
 
-  // Arma un String de la clave. Convierte el variant a un string
-  Function TipoElemento.ArmarString: String;
-  Var  SV: String;
-  Begin
-    Try
-      SV := VarToStr(Clave); // se convierte a string el campo variant sin importar lo que tenga
-      ArmarString := SV;
-    except
-      ArmarString := '';
-    End
-  End;
-
-  // Evalua el valor de la clave y retorna el Tipo de Datos del Variant
-  Function TipoElemento.TipoDatoClave(avClave: Variant): TipoDatosClave;
-  Var iTipo: Integer;
-  Begin
-    iTipo := VarType(avClave);
-
-    Case iTipo of
-      varEmpty     : TipoDatoClave := Otros;
-      varNull      : TipoDatoClave := Otros;
-      varSmallInt  : TipoDatoClave := Numero;
-      varInteger   : TipoDatoClave := Numero;
-      varSingle    : TipoDatoClave := Numero;
-      varDouble    : TipoDatoClave := Numero;
-      varCurrency  : TipoDatoClave := Numero;
-      varDate      : TipoDatoClave := Fecha;
-      varOleStr    : TipoDatoClave := Otros;
-      varDispatch  : TipoDatoClave := Otros;
-      varError     : TipoDatoClave := Otros;
-      varBoolean   : TipoDatoClave := Otros;
-      varVariant   : TipoDatoClave := Otros;
-      varUnknown   : TipoDatoClave := Desconocido;
-      varByte      : TipoDatoClave := Numero;
-      varWord      : TipoDatoClave := Numero;
-      varLongWord  : TipoDatoClave := Numero;
-      varInt64     : TipoDatoClave := Numero;
-      varStrArg    : TipoDatoClave := Cadena;
-      varString    : TipoDatoClave := Cadena;
-      varAny       : TipoDatoClave := Otros;
-      varUString   : TipoDatoClave := Cadena;
-      else
-        TipoDatoClave := Otros;
-    end;
+// inicializa elemento
+  procedure TipoElemento.Inicializar;
+  begin
+    DI:=0;
+    DR:=0;
+    DS:='';
+    DP:=Nil;
   end;
 
-  // Asigna vacio a la clave y NIL al puntero generico
-  Function TipoElemento.TipoElementoVacio(): TipoElemento;
-  Var X: TipoElemento;
-  Begin
-    X.Clave := '';
-    X.Valor := NIL;
-    TipoElementoVacio := X;
-  End;
 
-  // Retorno Verdadero si el TE esta vacio
-  Function TipoElemento.EsTEVacio(): Boolean;
-  Begin
-    EsTEVacio := False;
-    If (Clave = '') AND (Valor = NIL) Then EsTEVacio := True;
-  End;
+// compara dos elementos segun campoComparar -> retorna un enumerado
+  function TipoElemento.CompararTE(X2:TipoElemento; ComparaPor:CampoComparar):Comparacion;
+  begin
+    try
+      case ComparaPor of
+        CDI: begin
+             if DI=X2.DI then
+                CompararTE:=igual
+             else
+              if DI>X2.DI then
+                CompararTE:=mayor
+              else
+                  CompararTe:=menor;
+
+             end;
+
+        CDR: begin
+             if DR=X2.DR then
+                CompararTE:=igual
+             else
+              if DR>X2.DR then
+                CompararTE:=mayor
+              else
+                  CompararTe:=menor;
+
+             end;
+
+        CDS: begin
+             if DS=X2.DS then
+              compararTE:=igual
+             else
+              compararTE:=distinto;
+             end;
+
+        CDP: begin
+             if DP=X2.DP then
+              CompararTE:=igual
+             else
+               CompararTE:=distinto;
+             end;
+
+        CDV: begin
+             if DV=X2.DV then
+              CompararTE:=igual
+             else
+               CompararTE:=distinto;
+             end;
+
+         CDIDS: begin
+             if (DI=X2.DI) and (DS=X2.DS) then
+                CompararTE:=igual
+             else
+                CompararTE:=distinto;
+         end;
+
+         CDIDR: begin
+             if (DI=X2.DI) and (DR=X2.DR) then
+                CompararTE:=igual
+             else
+                CompararTE:=distinto;
+         end;
+      else
+      CompararTE:=error;
+      end;        // de case
+
+    except
+    CompararTE:=error;
+    end;
+
+  end;
+
+// arma string separado por tabuladores a partir de tipoElemento
+  function TipoElemento.ArmarString:string;
+  begin
+  ArmarString:=intToStr(DI)+ cTab+ floatToStr(DR)+ cTab+ DS+ cTab+ DV;
+  end;
+
+// carga un TipoElemento a partir de un string
+  function TipoElemento.CargarTE(S:string):boolean;
+  var
+  posTab:integer;
+  flag:boolean;
+  begin
+    flag:=true;
+    posTab:=pos(cTab,S);                  // ubico primer Tab
+    if posTab=0 then                      // si no hay Tab devuelvo error
+       flag:=false                        // bandera de NoError -> false
+    else
+    begin
+        if copy(s,1,posTab-1)='' then
+          DI:=0
+        else
+          DI:=strToInt(copy(S,1,posTab-1));     // desde string[1] hasta pos anterior a Tab
+        S:=copy(s,posTab+1,length(s)-1);      // asigno en S el resto del string desp de Tab
+
+        posTab:=pos(cTab,S);
+        if posTab=0 then
+          flag:=false
+        else
+        begin
+            if copy(s,1,posTab-1)='' then
+              DR:=0.0
+            else
+              DR:=strToFloat(copy(S,1,posTab-1));
+            S:=copy(s,posTab+1,length(s)-1);
+
+            posTab:=pos(cTab,S);
+            if posTab=0 then
+              flag:=false
+            else
+            begin
+            DS:=copy(S,1,posTab-1);
+            S:=copy(s,posTab+1,length(s)-1);
+            if DV<>'' then
+              DV:=S;          // desde el copy anterior en S queda solo V
+            end;
+        end;
+    end;
+  CargarTE:=flag;     // si True entonces se cargó el elemento
+  end;
+
+
+
 
 end.
