@@ -25,6 +25,9 @@ type
     Function agregar(x:TipoElemento) : Errores;
 //    Function retornarString():String;
     Function eliminar(p:PosicionLista) : Errores;
+    Function siguiente(p:PosicionLista) : PosicionLista;
+    Function anterior(p:PosicionLista) : PosicionLista;
+    Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
   end;
 implementation
 
@@ -100,7 +103,37 @@ implementation
           final := final - 1;
           Qitems:=Qitems-1;
         end;
-        //elementos[p]:=NULO;
       end;
   end;
+
+  Function Lista.siguiente(p:PosicionLista): PosicionLista;
+  begin
+    siguiente:= p+1;
+  end;
+
+  Function Lista.anterior(p:PosicionLista):PosicionLista;
+  begin
+    anterior:= p-1;
+  end;
+
+  Function Lista.actualizar(x: TipoElemento; p: PosicionLista):Errores;
+  var
+    resultado: Errores;
+  begin
+    resultado := CError;
+    if Lista.esVacia then
+      resultado:= Vacia
+    else
+    begin
+      if (p>MIN) and (p<MAX) then
+      begin
+         elementos[p]:=x;
+         resultado:= OK;
+      end
+      else
+        resultado:=PosicionInvalida;
+    end;
+    actualizar:=resultado;
+  end;
+
 end.
