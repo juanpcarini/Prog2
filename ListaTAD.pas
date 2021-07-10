@@ -28,6 +28,7 @@ type
     Function siguiente(p:PosicionLista) : PosicionLista;
     Function anterior(p:PosicionLista) : PosicionLista;
     Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
+    Function insertar(x:TipoElemento;p:PosicionLista):Errores;
   end;
 implementation
 
@@ -96,14 +97,17 @@ implementation
           inicio:= NULO;
           final:=NULO;
           Qitems:= Qitems-1;
+          resultado:= OK;
         end
         else
         begin
           correrListado();
           final := final - 1;
           Qitems:=Qitems-1;
+          resultado:= OK;
         end;
       end;
+    eliminar:=resultado;
   end;
 
   Function Lista.siguiente(p:PosicionLista): PosicionLista;
@@ -136,4 +140,25 @@ implementation
     actualizar:=resultado;
   end;
 
+  Function lista.insertar(x: TipoElemento; p:PosicionLista):Errores;
+  var
+    resultado: Errores;
+    i:PosicionLista;
+  begin
+    resultado:= CError;
+    i:=final;
+    if Lista.esLlena then
+      resultado:= CError
+    else
+    begin
+      while i>(p-1) do
+      begin
+        elementos[i+1]:=elementos[i];
+        i:= i-1;
+      end;
+      elementos[p]:=x;
+      resultado:=OK;
+    end;
+    insertar:=resultado;
+  end;
 end.
