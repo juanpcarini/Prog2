@@ -17,12 +17,13 @@ begin
   valor.DI:=2;
   E.Inicializar;
   lista.crear();
-  for i := 1 to 5 do
-  begin
-    E.DI := 123 + i;
-    EMsg := lista.agregar(E);
-  end;
-
+ { for i := 1 to 5 do
+   begin
+       E.DI := 123 + i;
+           EMsg := lista.agregar(E);
+             end;
+             }
+  lista.llenarRandom(30);
   if lista.esVacia then
     writeln('esta vacia')
   else
@@ -36,8 +37,8 @@ begin
 
   lista.actualizar(valor,2);
   //lista.eliminar(3);
-  lista.insertar(valor,2);
-  writeln(lista.siguiente(3));
+  lista.insertar(valor,4);
+   writeln(lista.siguiente(3));
   writeln(lista.anterior(3));
   readln;
 end.

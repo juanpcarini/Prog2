@@ -6,7 +6,7 @@ uses
 
 const
     MIN= 1;
-    MAX= 100;
+    MAX= 10;
     NULO = 0;
 type
   PosicionLista = LongInt;
@@ -29,6 +29,11 @@ type
     Function anterior(p:PosicionLista) : PosicionLista;
     Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
     Function insertar(x:TipoElemento;p:PosicionLista):Errores;
+    Function comienzo():PosicionLista;
+    Function fin():PosicionLista;
+    Function cantidadElementos():longInt;
+    Function llenarRandom(rangoHasta:longInt): Errores;
+
   end;
 implementation
 
@@ -160,5 +165,42 @@ implementation
       resultado:=OK;
     end;
     insertar:=resultado;
+  end;
+
+  Function Lista.comienzo():PosicionLista;
+  begin
+    comienzo:=inicio;
+  end;
+
+  Function Lista.fin():PosicionLista;
+  begin
+    fin:=final;
+  end;
+
+  Function Lista.cantidadElementos():longInt;
+  begin
+    cantidadElementos:=Qitems;
+  end;
+
+  Function lista.llenarRandom(rangoHasta: LongInt):Errores;
+  var
+    resultado:Errores;
+    i:integer;
+  begin
+    resultado:=CError;
+
+    if not lista.esVacia then                 //PREGUNTAR SI ESTA BIEN LA VALIDAR O CARGAR DE UNA
+      resultado:=CError
+    else
+    begin
+      for i:=1 to MAX do
+        elementos[i].DI:=random(rangoHasta)+3;
+
+      inicio:=MIN;
+      final:=MAX;
+      Qitems:=final;
+      resultado:= OK;
+    end;
+    llenarRandom:=resultado;
   end;
 end.
