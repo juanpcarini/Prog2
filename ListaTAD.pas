@@ -15,15 +15,16 @@ type
   private
     inicio: PosicionLista;
     final: PosicionLista;
-
-    elementos : array [MIN..MAX] of TipoElemento;
-  public
     Qitems: integer;
+    elementos : array [MIN..MAX] of TipoElemento;
+    Function validar(x:TipoElemento;min,max:integer):boolean;
+  public
+
     Procedure crear();
     Function esVacia():boolean;
     Function esLlena():boolean;
     Function agregar(x:TipoElemento) : Errores;
-//    Function retornarString():String;
+    Function retornarString():String;
     Function eliminar(p:PosicionLista) : Errores;
     Function siguiente(p:PosicionLista) : PosicionLista;
     Function anterior(p:PosicionLista) : PosicionLista;
@@ -33,9 +34,20 @@ type
     Function fin():PosicionLista;
     Function cantidadElementos():longInt;
     Function llenarRandom(rangoHasta:longInt): Errores;
+    Function buscar(x:TipoElemento;ComparaPor:CampoComparar):Errores;
+    Function ordinal(PLogica:integer):PosicionLista;
+    Function validarPosicion(p:PosicionLista):boolean;
 
   end;
 implementation
+
+ { Function validar(x:TipoElemento;min,max:integer):boolean;
+   begin
+       if (x>min) and (x<max)then
+             validar:=true
+                 else
+                       validar:=false;
+                         end;}
 
   Procedure Lista.crear;
   begin
@@ -98,7 +110,7 @@ implementation
       begin
         if Qitems = 1 then
         begin
-          correrListado();
+          elementos[1]:=NULO;
           inicio:= NULO;
           final:=NULO;
           Qitems:= Qitems-1;
@@ -202,5 +214,39 @@ implementation
       resultado:= OK;
     end;
     llenarRandom:=resultado;
+  end;
+
+  Function lista.retornarString():string;
+  var
+    i: PosicionLista;
+  begin
+    for i := inicio to final do
+    begin
+
+    end;
+  end;
+
+  Function lista.ordinal(PLogica: Integer):PosicionLista;
+  begin
+    if(PLogica>inicio) and (PLogica<final) then
+      ordinal:=PLogica;
+  end;
+
+  Function lista.buscar(x: TipoElemento; ComparaPor: CampoComparar):PosicionLista;
+var
+  i: PosicionLista;
+  begin
+    for i := inicio to final do
+    begin
+      elementos[i].CompararTE(x,ComparaPor)
+    end;
+  end;
+
+  Function lista.validarPosicion(p: PosicionLista):boolean;
+  begin
+    if(p>inicio) and (p<final) then
+    validar:=true
+    else
+      validarPosicion:=false;
   end;
 end.
