@@ -17,7 +17,7 @@ type
     final: PosicionLista;
     Qitems: integer;
     elementos : array [MIN..MAX] of TipoElemento;
-    Function validar(x:TipoElemento;min,max:integer):boolean;
+   // Function validar(x:TipoElemento;min,max:integer):boolean;
   public
 
     Procedure crear();
@@ -34,7 +34,7 @@ type
     Function fin():PosicionLista;
     Function cantidadElementos():longInt;
     Function llenarRandom(rangoHasta:longInt): Errores;
-    Function buscar(x:TipoElemento;ComparaPor:CampoComparar):Errores;
+//    Function buscar(x:TipoElemento;ComparaPor:CampoComparar):Errores;
     Function ordinal(PLogica:integer):PosicionLista;
     Function validarPosicion(p:PosicionLista):boolean;
 
@@ -48,6 +48,10 @@ implementation
                  else
                        validar:=false;
                          end;}
+   Function lista.validarPosicion(p: PosicionLista):boolean;
+  begin
+      validarPosicion:= (p>=inicio) and (p<=final);
+  end;
 
   Procedure Lista.crear;
   begin
@@ -75,13 +79,22 @@ implementation
       resultado := LLena
     else
     begin
+      if Lista.esVacia then
+      begin
+        final:= final +1;
+        elementos[final]:=x;
+        inicio:= final;
+        Qitems:= Qitems+1;
+        resultado:= OK;
+      end
+      else
+      begin
       final:= final +1;
       elementos[final]:=x;
-      if Lista.esVacia then
-        inicio:= final;
       Qitems:= Qitems+1;
       resultado:= OK;
-    end;
+      end;
+   end;
     agregar:=resultado;
   end;
 
@@ -104,16 +117,13 @@ implementation
     resultado:= CError;
     if Lista.esVacia then
       resultado := Vacia;
-    if (p<inicio) or (p>final) then
-      resultado:= CError
+    if not lista.validarPosicion(p) then
+      resultado:= PosicionInvalida
     else
       begin
         if Qitems = 1 then
         begin
-          elementos[1]:=NULO;
-          inicio:= NULO;
-          final:=NULO;
-          Qitems:= Qitems-1;
+          Lista.crear();
           resultado:= OK;
         end
         else
@@ -129,12 +139,26 @@ implementation
 
   Function Lista.siguiente(p:PosicionLista): PosicionLista;
   begin
-    siguiente:= p+1;
+    if not Lista.esVacia then
+    begin
+      if Lista.validarPosicion(p+1) then
+        siguiente:= p+1
+      else
+        siguiente:=NULO;
+    end;
+
   end;
 
   Function Lista.anterior(p:PosicionLista):PosicionLista;
   begin
-    anterior:= p-1;
+    If not Lista.esVacia then
+    begin
+      if Lista.validarPosicion(p-1) then
+        anterior:= p-1
+      else
+        anterior:=NULO;
+    end;
+
   end;
 
   Function Lista.actualizar(x: TipoElemento; p: PosicionLista):Errores;
@@ -146,7 +170,7 @@ implementation
       resultado:= Vacia
     else
     begin
-      if (p>MIN) and (p<MAX) then
+      if lista.validarPosicion(p) then
       begin
          elementos[p]:=x;
          resultado:= OK;
@@ -158,26 +182,42 @@ implementation
   end;
 
   Function lista.insertar(x: TipoElemento; p:PosicionLista):Errores;
-  var
+    Function correrListado():Errores;
+    var
     resultado: Errores;
     i:PosicionLista;
-  begin
-    resultado:= CError;
-    i:=final;
-    if Lista.esLlena then
-      resultado:= CError
-    else
+
     begin
-      while i>(p-1) do
+      resultado:= CError;
+      i:=final;
+      if Lista.esVacia then
       begin
-        elementos[i+1]:=elementos[i];
-        i:= i-1;
+        elementos[p]:=x;
+        resultado:=OK;
+      end
+      else
+      begin
+        if Lista.esLlena then
+          resultado:= Llena
+        else
+        begin
+          while i>=(p) do
+          begin
+            elementos[i+1]:=elementos[i];
+            i:= i-1;
+          end;
+          elementos[p]:=x;
+          resultado:=OK;
+        end;
+        correrListado:=resultado;
       end;
-      elementos[p]:=x;
-      resultado:=OK;
     end;
-    insertar:=resultado;
+  begin
+
+    insertar:=correrListado();
   end;
+
+
 
   Function Lista.comienzo():PosicionLista;
   begin
@@ -200,53 +240,50 @@ implementation
     i:integer;
   begin
     resultado:=CError;
-
-    if not lista.esVacia then                 //PREGUNTAR SI ESTA BIEN LA VALIDAR O CARGAR DE UNA
+    if not lista.esVacia then
       resultado:=CError
     else
     begin
       for i:=1 to MAX do
-        elementos[i].DI:=random(rangoHasta)+3;
-
+      begin
+        elementos[i].DI:=random(rangoHasta);
+        final:=i;
+        Qitems:=Qitems+1;
+      end;
       inicio:=MIN;
-      final:=MAX;
-      Qitems:=final;
+    {  final:=MAX;                //SI YO LLENO LA LISTA FINAL DEBERIA SER IGUAL A MAX CONSIDERANDO QUE LA LISTA ESTA VACIA AL IGUAL Qitems
+          Qitems:=final;}
       resultado:= OK;
     end;
     llenarRandom:=resultado;
   end;
 
-  Function lista.retornarString():string;
+{  Function lista.retornarString():string;
   var
-    i: PosicionLista;
-  begin
-    for i := inicio to final do
-    begin
+      i: PosicionLista;
+        begin
+            for i := inicio to final do
+                begin
 
-    end;
-  end;
+                    end;
+                      end;}
 
   Function lista.ordinal(PLogica: Integer):PosicionLista;
   begin
-    if(PLogica>inicio) and (PLogica<final) then
+    if lista.validarPosicion(PLogica) then
       ordinal:=PLogica;
   end;
 
-  Function lista.buscar(x: TipoElemento; ComparaPor: CampoComparar):PosicionLista;
-var
-  i: PosicionLista;
-  begin
-    for i := inicio to final do
-    begin
-      elementos[i].CompararTE(x,ComparaPor)
-    end;
-  end;
+ { Function lista.buscar(x: TipoElemento; ComparaPor: CampoComparar):PosicionLista;
+ var
+   i: PosicionLista;
+     begin
+         for i := inicio to final do
+             begin
+                   //Tipos.Comparacion.igual
+                         //elementos[i].CompararTE(x,ComparaPor)
+                             end;
+                               end;}
 
-  Function lista.validarPosicion(p: PosicionLista):boolean;
-  begin
-    if(p>inicio) and (p<final) then
-    validar:=true
-    else
-      validarPosicion:=false;
-  end;
+
 end.

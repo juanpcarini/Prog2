@@ -2,9 +2,9 @@ program Project1;
 
 uses
   System.SysUtils,
-  //Unit1 in 'Unit1.pas',
   ListaTAD in 'ListaTAD.pas',
-  Tipos;
+  Tipos,
+  ListaTADPuntero in 'ListaTADPuntero.pas';
 
 var
   lista:ListaTAD.Lista;
