@@ -32,9 +32,11 @@ type
     Function esLlena():boolean;
     Function agregar(x:TipoElemento) : Errores;
     Function eliminar(p:PosicionLista) : Errores;
-{    Function retornarString():String;
     Function siguiente(p:PosicionLista) : PosicionLista;
-        Function anterior(p:PosicionLista) : PosicionLista;
+    Function anterior(p:PosicionLista) : PosicionLista;
+    Function comienzo():PosicionLista;
+    Function fin():PosicionLista;
+{    Function retornarString():String;
             Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
                 Function insertar(x:TipoElemento;p:PosicionLista):Errores;
                     Function comienzo():PosicionLista;
@@ -74,6 +76,10 @@ begin
     resultado:=CError
   else
   begin
+    if lista.esVacia then
+    begin
+    
+    end;
     new(PL);
     PL^.datos(x);
     PL^.anterior(final);
@@ -87,28 +93,65 @@ begin
 end;
 
 Function lista.eliminar(p: PosicionLista):Errores;
-  Function correrListado():Errores;
-  var
-    resultado:Errores;
-    elementoAnt,elementoSig:PosicionLista;
+var
+  resultado:Errores;
+  elementoAnt,elementoSig:PosicionLista;
+begin
+  resultado:=CError;
+  if lista.esVacia then
+    resultado:=Vacia
+  else
   begin
-    if lista.esVacia then
-      resultado:=Vacia
-    else
-    begin
-        new(elementoAnt);
-        new(elementoSig);
-        elementoAnt:=p^.anterior;
-        elementoSig:=p^.siguiente;
+    new(elementoAnt);
+    new(elementoSig);
+    elementoAnt:=p^.anterior;
+    elementoSig:=p^.siguiente;
 
-        elementoAnt^.siguiente:=elementoSig;
-        elementoSig^.anterior:=elementoAnt;
-
-    end;
-
+    elementoAnt^.siguiente:=elementoSig;
+    elementoSig^.anterior:=elementoAnt;
+    resultado:=OK;
   end;
+  eliminar:=resultado;
+  end;
+
+Function lista.siguiente(p: PosicionLista):PosicionLista;
+begin
+  if lista.esVacia then
+    siguiente:=NULO
+  else
+  begin
+      siguiente:=p^.siguiente;
+  end;
+end;
+                                            //En caso de que nos pidan el anterior del primero, deberia devolver NULO , pero si esta vacia tambien retorna NULO?
+                                            //de igual forma que si fuera el siguiente del ultimo, deberia retornar NULO,pero si esta vacia y no hay elementos es NULO tambien ??
+                                            
+Function lista.anterior(p: PosicionLista):PosicionLista;
+begin
+  if lista.esVacia then
+    anterior:=NULO
+  else
+  begin
+      anterior:=p^.anterior;
+  end;
+end;
+
+Function lista.comienzo():PosicionLista;
+begin
+  if lista.esVacia then
+    comienzo:=NULO
+  else
+    comienzo:=inicio;
+end;
+
+Function lista.fin():PosicionLista;
+begin
+  if lista.esVacia then
+    fin:=NULO
+  else
+    fin:=final;  
+end;
 begin
 
 end;
-
 end.
