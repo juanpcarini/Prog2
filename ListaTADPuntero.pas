@@ -90,9 +90,21 @@ Function lista.eliminar(p: PosicionLista):Errores;
   Function correrListado():Errores;
   var
     resultado:Errores;
-    punteroSig:PosicionLista;
+    elementoAnt,elementoSig:PosicionLista;
   begin
+    if lista.esVacia then
+      resultado:=Vacia
+    else
+    begin
+        new(elementoAnt);
+        new(elementoSig);
+        elementoAnt:=p^.anterior;
+        elementoSig:=p^.siguiente;
 
+        elementoAnt^.siguiente:=elementoSig;
+        elementoSig^.anterior:=elementoAnt;
+
+    end;
 
   end;
 begin

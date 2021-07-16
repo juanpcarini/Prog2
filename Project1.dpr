@@ -34,11 +34,11 @@ begin
   else
     writeln('no esta llena');
 
-
-  lista.actualizar(valor,2);
-  //lista.eliminar(3);
-  lista.insertar(valor,4);
-   writeln(lista.siguiente(3));
-  writeln(lista.anterior(3));
+   writeln(lista.retornarString);
+  {lista.actualizar(valor,2);
+    //lista.eliminar(3);
+      lista.insertar(valor,4);
+         writeln(lista.siguiente(3));
+           writeln(lista.anterior(3));}
   readln;
 end.
