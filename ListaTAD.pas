@@ -42,6 +42,9 @@ implementation
 
    Function lista.validarPosicion(p: PosicionLista):boolean;
   begin
+      if lista.esVacia then
+        validarPosicion:=false
+      else
       validarPosicion:= (p>=inicio) and (p<=final);
   end;
 
@@ -107,8 +110,6 @@ implementation
     resultado: Errores;
   begin
     resultado:= CError;
-    if Lista.esVacia then
-      resultado := Vacia;
     if not lista.validarPosicion(p) then
       resultado:= PosicionInvalida
     else
@@ -131,25 +132,21 @@ implementation
 
   Function Lista.siguiente(p:PosicionLista): PosicionLista;
   begin
-    if not Lista.esVacia then
-    begin
       if Lista.validarPosicion(p+1) then
         siguiente:= p+1
       else
         siguiente:=NULO;
-    end;
+
 
   end;
 
   Function Lista.anterior(p:PosicionLista):PosicionLista;
   begin
-    If not Lista.esVacia then
-    begin
+
       if Lista.validarPosicion(p-1) then
         anterior:= p-1
       else
         anterior:=NULO;
-    end;
 
   end;
 
@@ -158,21 +155,18 @@ implementation
     resultado: Errores;
   begin
     resultado := CError;
-    if Lista.esVacia then
-      resultado:= Vacia
-    else
+
+    if lista.validarPosicion(p) then
     begin
-      if lista.validarPosicion(p) then
-      begin
-         elementos[p]:=x;
-         resultado:= OK;
-      end
-      else
-        resultado:=PosicionInvalida;
-    end;
+      elementos[p]:=x;
+      resultado:= OK;
+    end
+    else
+    resultado:=PosicionInvalida;
+
     actualizar:=resultado;
   end;
-
+    //para insertar deberia hacer otro validar posicion ya que si tengo que insertar un elemento en el array vacio me da false y si fuera mal la posicion tambien me daria false, por lo tanto no puedo comprobar cuando es vacia y cuando mal
   Function lista.insertar(x: TipoElemento; p:PosicionLista):Errores;
     Function correrListado():Errores;
     var
@@ -185,6 +179,9 @@ implementation
       if Lista.esVacia then
       begin
         elementos[p]:=x;
+        inicio:=p;
+        final:=p;
+        Qitems:=Qitems+1;
         resultado:=OK;
       end
       else
@@ -200,6 +197,8 @@ implementation
           end;
           elementos[p]:=x;
           resultado:=OK;
+          Qitems:=Qitems+1;
+          final:=final+1;
         end;
         correrListado:=resultado;
       end;
@@ -258,16 +257,26 @@ implementation
       ordinal:=PLogica;
   end;
 
-{ Function lista.buscar(x: TipoElemento; ComparaPor: CampoComparar):PosicionLista;
- var
-    i: PosicionLista;
-      begin
-          for i := inicio to final do
-              begin
-                    Tipos.Comparacion.igual
-                          elementos[i].CompararTE(x,ComparaPor)
-                                end;
-                                  end;}
+
+{     Function buscar(x:TipoElemento;ComparaPor:CampoComparar):Errores;
+ Function lista.buscar(x: TipoElemento; ComparaPor: CampoComparar):PosicionLista;
+   Function devolverResultado():Comparacion;
+     var
+         i:integer;
+             resultado: Comparacion;
+               begin
+                 for i := inicio to final do
+                   begin
+                       if elementos[i] = x then
+                             resultado:=elementos[i].CompararTE(x,ComparaPor);
+
+                               end;
+                                  end;
+{                                  }
+ {begin
+
+   end;}
+
   Function Lista.retornarString():String;
   var
     i:integer;

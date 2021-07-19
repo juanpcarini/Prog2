@@ -36,13 +36,12 @@ type
     Function anterior(p:PosicionLista) : PosicionLista;
     Function comienzo():PosicionLista;
     Function fin():PosicionLista;
+    Function insertar(x:TipoElemento;p:PosicionLista):Errores;
+    Function llenarRandom(rangoHasta:longInt): Errores;
 {    Function retornarString():String;
-            Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
-                Function insertar(x:TipoElemento;p:PosicionLista):Errores;
-                    Function comienzo():PosicionLista;
-                        Function fin():PosicionLista;
+            Function actualizar(x:TipoElemento;p:PosicionLista): Errores;            
                             Function cantidadElementos():longInt;
-                                Function llenarRandom(rangoHasta:longInt): Errores;
+                                
                                 //    Function buscar(x:TipoElemento;ComparaPor:CampoComparar):Errores;
                                     Function ordinal(PLogica:integer):PosicionLista;
                                         Function validarPosicion(p:PosicionLista):boolean;}
@@ -81,10 +80,10 @@ begin
     
     end;
     new(PL);
-    PL^.datos(x);
-    PL^.anterior(final);
-    PL^.siguiente(nil);
-    final^.siguiente(PL);
+    PL^.datos:=x;
+    PL^.anterior:=final;
+    PL^.siguiente:=nil;
+    final^.siguiente:=PL;
     final:=PL;
     Qitems:=Qitems+1;
     resultado:=OK
@@ -151,7 +150,64 @@ begin
   else
     fin:=final;  
 end;
+Function lista.insertar(x:TipoElemento;p:PosicionLista):Errores;
+  Function enlazarInsercion():Errores;
+  var
+    resultado:Errores;
+    nuevo,anterior:PosicionLista;
+  begin
+    resultado:=CError;
+    if lista.esLlena then
+      resultado:=LLena
+    else
+    begin
+      new(nuevo);
+      nuevo^.datos:=x;
+      if (Qitems = 1) then
+      begin
+        nuevo^.anterior:=p^.anterior;
+        p^.anterior:=nuevo;
+        nuevo^.siguiente:=p;    
+        resultado:=OK;
+      end
+      else
+      begin
+        anterior:=p^.anterior;
+        anterior^.siguiente:=nuevo;
+        nuevo^.anterior:=anterior;
+        nuevo^.siguiente:=p;
+        p^.anterior:=nuevo;      
+        resultado:=OK;
+      end;
+    end;
+    enlazarInsercion:=resultado;
+  end;
 begin
-
+  insertar:=enlazarInsercion();
 end;
+
+Function lista.llenarRandom(rangoHasta:longInt): Errores;
+var
+  resultado:Errores;
+  x:TipoElemento;
+  elemento,elementoSig:PosicionLista;
+begin
+  resultado:=CError;
+  if lista.esVacia then
+    resultado:=Vacia
+  else
+  begin
+    new(elemento);
+    new(elementoSig);
+    elemento:=inicio;
+    while elemento <> final do
+    begin
+      x.DI:=random(rangoHasta);
+      elemento^.datos:=x;
+      elementoSig:=elemento^.siguiente;
+      elemento:= elementoSig;
+    end;
+  end;
+end;
+
 end.
