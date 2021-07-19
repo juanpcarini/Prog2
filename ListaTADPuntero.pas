@@ -41,12 +41,13 @@ type
     Function cantidadElementos():longInt;
     Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
     Function validarPosicion(p:PosicionLista):boolean;
+    Function ordinal(PLogica:integer):PosicionLista;
 {    Function retornarString():String;
                         
                             
                                 
                                 //    Function buscar(x:TipoElemento;ComparaPor:CampoComparar):Errores;
-                                    Function ordinal(PLogica:integer):PosicionLista;
+                                    
                                         }
   end;
 
@@ -247,11 +248,26 @@ begin
   cantidadElementos:=Qitems;
 end;
 
-Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
+Function lista.actualizar(x:TipoElemento;p:PosicionLista): Errores;
 var
   resultado:Errores;
 begin
-  
+  if lista.validarPosicion(p) then
+  begin
+    p^.datos:=x;
+    resultado:=OK;
+  end
+  else
+    resultado:=CError;
+  actualizar:= resultado;
 end;
 
+Function lista.ordinal(PLogica:integer):PosicionLista;
+begin
+  if lista.validarPosicion(PLogica) then
+    ordinal:=PLogica
+  else
+    ordinal:=NULO;
+  
+end;
 end.
