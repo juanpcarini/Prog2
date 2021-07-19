@@ -38,16 +38,41 @@ type
     Function fin():PosicionLista;
     Function insertar(x:TipoElemento;p:PosicionLista):Errores;
     Function llenarRandom(rangoHasta:longInt): Errores;
+    Function cantidadElementos():longInt;
+    Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
+    Function validarPosicion(p:PosicionLista):boolean;
 {    Function retornarString():String;
-            Function actualizar(x:TipoElemento;p:PosicionLista): Errores;            
-                            Function cantidadElementos():longInt;
+                        
+                            
                                 
                                 //    Function buscar(x:TipoElemento;ComparaPor:CampoComparar):Errores;
                                     Function ordinal(PLogica:integer):PosicionLista;
-                                        Function validarPosicion(p:PosicionLista):boolean;}
+                                        }
   end;
 
 implementation
+
+Function lista.validarPosicion(p:PosicionLista):boolean;
+var
+  flag:boolean;
+  x:PosicionLista;
+begin
+  x:=inicio;
+  if lista.esVacia then
+    flag:=false
+  else
+  begin
+    while (flag = false) and (x <= final) do
+    begin
+      if x = p then
+        flag:= true
+      else
+        x:=x^.siguiente;
+    end;
+    validarPosicion:=flag;
+  end;
+  
+end;
 
 Procedure lista.crear();
 begin
@@ -97,9 +122,7 @@ var
   elementoAnt,elementoSig:PosicionLista;
 begin
   resultado:=CError;
-  if lista.esVacia then
-    resultado:=Vacia
-  else
+  if lista.validarPosicion(p) then
   begin
     new(elementoAnt);
     new(elementoSig);
@@ -108,31 +131,32 @@ begin
 
     elementoAnt^.siguiente:=elementoSig;
     elementoSig^.anterior:=elementoAnt;
+    final:=final^.anterior;
+    Qitems:=Qitems-1;
     resultado:=OK;
-  end;
+  end
+  else
+    resultado:=PosicionInvalida;
   eliminar:=resultado;
-  end;
+end;
+
 
 Function lista.siguiente(p: PosicionLista):PosicionLista;
 begin
-  if lista.esVacia then
-    siguiente:=NULO
+  if lista.validarPosicion(p^.siguiente) then
+    siguiente:=p^.siguiente
   else
-  begin
-      siguiente:=p^.siguiente;
-  end;
+    siguiente:=NULO;
 end;
-                                            //En caso de que nos pidan el anterior del primero, deberia devolver NULO , pero si esta vacia tambien retorna NULO?
+                                      //En caso de que nos pidan el anterior del primero, deberia devolver NULO , pero si esta vacia tambien retorna NULO?
                                             //de igual forma que si fuera el siguiente del ultimo, deberia retornar NULO,pero si esta vacia y no hay elementos es NULO tambien ??
                                             
 Function lista.anterior(p: PosicionLista):PosicionLista;
 begin
-  if lista.esVacia then
-    anterior:=NULO
+  if lista.validarPosicion(p^.anterior) then
+    anterior:=p^.anterior
   else
-  begin
-      anterior:=p^.anterior;
-  end;
+    anterior:=NULO;
 end;
 
 Function lista.comienzo():PosicionLista;
@@ -161,24 +185,32 @@ Function lista.insertar(x:TipoElemento;p:PosicionLista):Errores;
       resultado:=LLena
     else
     begin
-      new(nuevo);
-      nuevo^.datos:=x;
-      if (Qitems = 1) then
+      if lista.validarPosicion then
       begin
-        nuevo^.anterior:=p^.anterior;
-        p^.anterior:=nuevo;
-        nuevo^.siguiente:=p;    
-        resultado:=OK;
+        new(nuevo);
+        nuevo^.datos:=x;
+        if (Qitems = 1) then
+        begin
+          nuevo^.anterior:=p^.anterior;
+          p^.anterior:=nuevo;
+          nuevo^.siguiente:=p;
+          Qitems:=Qitems+1;    
+          resultado:=OK;
+        end
+        else
+        begin
+          anterior:=p^.anterior;
+          anterior^.siguiente:=nuevo;
+          nuevo^.anterior:=anterior;
+          nuevo^.siguiente:=p;
+          p^.anterior:=nuevo;      
+          Qitems:=Qitems+1;
+          resultado:=OK;
+        end;
       end
       else
-      begin
-        anterior:=p^.anterior;
-        anterior^.siguiente:=nuevo;
-        nuevo^.anterior:=anterior;
-        nuevo^.siguiente:=p;
-        p^.anterior:=nuevo;      
-        resultado:=OK;
-      end;
+        resultado:=CError;
+      
     end;
     enlazarInsercion:=resultado;
   end;
@@ -200,7 +232,7 @@ begin
     new(elemento);
     new(elementoSig);
     elemento:=inicio;
-    while elemento <> final do
+    while elemento <= final do
     begin
       x.DI:=random(rangoHasta);
       elemento^.datos:=x;
@@ -208,6 +240,18 @@ begin
       elemento:= elementoSig;
     end;
   end;
+end;
+
+Function lista.cantidadElementos():longInt;
+begin
+  cantidadElementos:=Qitems;
+end;
+
+Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
+var
+  resultado:Errores;
+begin
+  
 end;
 
 end.
