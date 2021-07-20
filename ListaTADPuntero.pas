@@ -63,7 +63,7 @@ begin
     flag:=false
   else
   begin
-    while (flag = false) and (x <= final) do
+    while (flag = false) and (x <> nulo) do
     begin
       if x = p then
         flag:= true
@@ -103,16 +103,27 @@ begin
   begin
     if lista.esVacia then
     begin
-    
+      new(PL);
+      PL^.datos:=x;      
+      PL^.anterior=nulo;
+      PL^.siguiente=nulo;
+      inicio:=PL;
+      final:=PL;
+      Qitems:=Qitems+1;
+      resultado:=OK;      
+    end
+    else
+    begin
+      new(PL);
+      PL^.datos:=x;
+      PL^.anterior:=final;
+      PL^.siguiente:=nil;
+      final^.siguiente:=PL;
+      final:=PL;
+      Qitems:=Qitems+1;
+      resultado:=OK;
     end;
-    new(PL);
-    PL^.datos:=x;
-    PL^.anterior:=final;
-    PL^.siguiente:=nil;
-    final^.siguiente:=PL;
-    final:=PL;
-    Qitems:=Qitems+1;
-    resultado:=OK
+    
   end;
   agregar:=resultado;
 end;
@@ -122,19 +133,39 @@ var
   resultado:Errores;
   elementoAnt,elementoSig:PosicionLista;
 begin
-  resultado:=CError;
+   resultado:=CError;
   if lista.validarPosicion(p) then
   begin
-    new(elementoAnt);
-    new(elementoSig);
-    elementoAnt:=p^.anterior;
-    elementoSig:=p^.siguiente;
+    if p = inicio then
+    begin
+      elementoSig:=p^.siguiente;
+      elementoSig^.anterior:=NULO;
+      inicio:=elementoSig;
+      Qitems:=Qitems-1;
+      resultado:=OK;
+    end;
+      
+    if p = final then
+    begin
+      elementoAnt:=p^.anterior;
+      elementoAnt^.siguiente:=NULO;
+      final:=elementoAnt;
+      Qitems:=Qitems-1;
+      resultado:=OK;      
+    end;
+      
 
-    elementoAnt^.siguiente:=elementoSig;
-    elementoSig^.anterior:=elementoAnt;
-    final:=final^.anterior;
-    Qitems:=Qitems-1;
-    resultado:=OK;
+    if (p <>inicio) and (p<> final) then
+    begin
+      elementoAnt:=p^.anterior;
+      elementoSig:=p^.siguiente;
+
+      elementoAnt^.siguiente:=elementoSig;
+      elementoSig^.anterior:=elementoAnt;
+      Qitems:=Qitems-1;
+      resultado:=OK;
+    end;
+    
   end
   else
     resultado:=PosicionInvalida;

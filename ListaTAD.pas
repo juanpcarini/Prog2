@@ -74,21 +74,12 @@ implementation
       resultado := LLena
     else
     begin
-      if Lista.esVacia then
-      begin
-        final:= final +1;
-        elementos[final]:=x;
-        inicio:= final;
-        Qitems:= Qitems+1;
-        resultado:= OK;
-      end
-      else
-      begin
       final:= final +1;
       elementos[final]:=x;
+      if Lista.esVacia then
+        inicio:= final;
       Qitems:= Qitems+1;
       resultado:= OK;
-      end;
    end;
     agregar:=resultado;
   end;
@@ -168,44 +159,54 @@ implementation
   end;
     //para insertar deberia hacer otro validar posicion ya que si tengo que insertar un elemento en el array vacio me da false y si fuera mal la posicion tambien me daria false, por lo tanto no puedo comprobar cuando es vacia y cuando mal
   Function lista.insertar(x: TipoElemento; p:PosicionLista):Errores;
+  var
+    resultado: Errores;
+
+
     Function correrListado():Errores;
     var
     resultado: Errores;
     i:PosicionLista;
-
     begin
-      resultado:= CError;
       i:=final;
-      if Lista.esVacia then
+
+      while i>=(p) do
       begin
-        elementos[p]:=x;
-        inicio:=p;
-        final:=p;
-        Qitems:=Qitems+1;
-        resultado:=OK;
-      end
+        elementos[i+1]:=elementos[i];
+        i:= i-1;
+      end;
+      elementos[p]:=x;
+      final:=final+1;
+      correrListado:=OK;
+
+      end;
+
+  begin
+    resultado:=CError;
+    if lista.validarPosicion(p) then
+    begin
+      if lista.esLlena then
+      resultado:=Llena
       else
       begin
-        if Lista.esLlena then
-          resultado:= Llena
-        else
+         if Lista.esVacia then
         begin
-          while i>=(p) do
-          begin
-            elementos[i+1]:=elementos[i];
-            i:= i-1;
-          end;
           elementos[p]:=x;
+          inicio:=p;
+          final:=p;
           resultado:=OK;
-          Qitems:=Qitems+1;
-          final:=final+1;
-        end;
-        correrListado:=resultado;
-      end;
-    end;
-  begin
+        end
+        else
+          resultado:=correrListado();
 
-    insertar:=correrListado();
+        Qitems:=Qitems+1;
+      end;
+
+    end
+    else
+      resultado;
+
+    insertar:=resultado;
   end;
 
 
