@@ -31,16 +31,16 @@ type
     Function esVacia():boolean;                           //.
     Function esLlena():boolean;                              //.
     Function agregar(x:TipoElemento) : Errores;              //.
-    Function retornarString():String;
-    Function eliminar(p:PosicionLista) : Errores;
+    Function retornarString():String;                         //.
+    Function eliminar(p:PosicionLista) : Errores;             //.
     Function siguiente(p:PosicionLista) : PosicionLista;        //.
     Function anterior(p:PosicionLista) : PosicionLista;            //.
-    Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
+    Function actualizar(x:TipoElemento;p:PosicionLista): Errores;    //.
     Function insertar(x:TipoElemento;p:PosicionLista):Errores;
     Function comienzo():PosicionLista;                                 //.
     Function fin():PosicionLista;                                         //.
     Function cantidadElementos():longInt;                                    //.
-    Function llenarRandom(rangoHasta:longInt): Errores;
+    Function llenarRandom(rangoHasta:longInt): Errores;                     //.
   //Function buscar(x:TipoElemento;ComparaPor:CampoComparar):Errores;
     Function ordinal(PLogica:integer):PosicionLista;
     Function validarPosicion(p:PosicionLista):boolean;
@@ -236,6 +236,61 @@ begin
       x:=cursor[x].siguiente;
       end;
     retornarString:=concatenado;
+  end;
+end;
+
+Function lista.actualizar(x:TipoElemento;p:PosicionLista): Errores;
+var
+  resultado:Errores;
+begin
+  resultado:=CError;
+  if lista.validarPosicion(p) then
+  begin
+    cursor[p].datos:=x;
+    resultado:=OK;
+  end
+  else
+  resultado:=PosicionInvalida;
+
+  actualizar:=resultado;
+end;
+
+Function lista.insertar(x:TipoElemento;p:PosicionLista):Errores;
+var
+  resultado:Errores;
+  dato:Tipoelemento;
+  sig,ant,nuevaPosicion:PosicionLista;
+begin
+  resultado:=CError;
+  if lista.esLlena then
+    resultado:=Llena
+  else
+  begin
+      if lista.validarPosicion then
+      begin
+          nuevaPosicion:=libre;
+          libre:=cursor[libre].siguiente;
+
+          cursor[nuevaPosicion].datos:=x;
+          cursor[nuevaPosicion].anterior:=cursor[p].anterior;
+          cursor[p].siguiente:=p;
+          cursor[p].anterior:=nuevaPosicion;
+        if (Qitems=1) and (p=inicio) and (p=final) then
+        begin
+          inicio=p;
+        end
+        else
+        begin
+          ant:=cursor[nuevaPosicion].anterior;
+          cursor[ant].siguiente:=nuevaPosicion;
+        end;
+        Qitems:=Qitems+1;
+        resultado:=OK;
+      end
+      else
+        resultado:=PosicionInvalida;
+
+      insertar:=resultado;
   end;
 end;
 end.
