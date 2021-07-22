@@ -36,25 +36,38 @@ type
     Function siguiente(p:PosicionLista) : PosicionLista;        //.
     Function anterior(p:PosicionLista) : PosicionLista;            //.
     Function actualizar(x:TipoElemento;p:PosicionLista): Errores;    //.
-    Function insertar(x:TipoElemento;p:PosicionLista):Errores;
+    Function insertar(x:TipoElemento;p:PosicionLista):Errores;         //.
     Function comienzo():PosicionLista;                                 //.
     Function fin():PosicionLista;                                         //.
     Function cantidadElementos():longInt;                                    //.
     Function llenarRandom(rangoHasta:longInt): Errores;                     //.
   //Function buscar(x:TipoElemento;ComparaPor:CampoComparar):Errores;
-    Function ordinal(PLogica:integer):PosicionLista;
-    Function validarPosicion(p:PosicionLista):boolean;
+    Function ordinal(PLogica:integer):PosicionLista;                        //.
+    Function validarPosicion(p:PosicionLista):boolean;                     //.
   end;
 implementation
 
 Function lista.validarPosicion(p:PosicionLista):boolean;
+var
+  flag:boolean;
+  elemento:PosicionLista;
 begin
   if lista.esVacia then
     validarPosicion:=false
   else
+  begin
+    elemento:=inicio;
+    flag:=false;
+   while (flag = false) and (elemento <> nulo) do
     begin
-      validarPosicion:=(p>=inicio) and (p<=final);
+      if elemento = p then
+        flag:= true
+      else
+        elemento:=cursor[elemento].siguiente;
     end;
+    validarPosicion:=flag;
+  end;
+
 end;
 
 
@@ -293,4 +306,28 @@ begin
       insertar:=resultado;
   end;
 end;
+
+Function lista.ordinal(PLogica:integer):PosicionLista;
+var
+  flag:boolean;
+  elemento:PosicionLista;
+  i:integer;
+begin
+
+  if lista.validarPosicion(PLogica) then
+  begin
+    elemento:=inicio;
+    i:=1;
+    while (i<PLogica) and (elemento<>NULO) do
+    begin
+        inc(i);
+        elemento:=cursor[elemento].siguiente;
+    end;
+    if elemento <>NULO then
+      ordinal:= elemento;
+  end;
+
+end;
+
+
 end.
