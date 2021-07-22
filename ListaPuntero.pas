@@ -42,6 +42,7 @@ type
     Function actualizar(x:TipoElemento;p:PosicionLista): Errores;
     Function validarPosicion(p:PosicionLista):boolean;
     Function ordinal(PLogica:integer):PosicionLista;
+    Function retornarString():String;
 {    Function retornarString():String;
                         
                             
@@ -126,24 +127,26 @@ begin
    resultado:=CError;
   if lista.validarPosicion(p) then
   begin
+    if (Qitems = 0) and (p=inicio) and (p=final) then
+    begin
+        lista.crear();
+    end;
     if p = inicio then
     begin
       elementoSig:=p^.siguiente;
       elementoSig^.anterior:=NULO;
       inicio:=elementoSig;
-      Qitems:=Qitems-1;
-      resultado:=OK;
+
     end;
-      
+
     if p = final then
     begin
       elementoAnt:=p^.anterior;
       elementoAnt^.siguiente:=NULO;
       final:=elementoAnt;
       Qitems:=Qitems-1;
-      resultado:=OK;      
     end;
-      
+
 
     if (p <>inicio) and (p<> final) then
     begin
@@ -153,9 +156,9 @@ begin
       elementoAnt^.siguiente:=elementoSig;
       elementoSig^.anterior:=elementoAnt;
       Qitems:=Qitems-1;
-      resultado:=OK;
     end;
-    
+
+    resultado:=OK;
   end
   else
     resultado:=PosicionInvalida;
@@ -290,5 +293,21 @@ begin
   else
     ordinal:=NULO;
   
+end;
+Function lista.retornarString():String;
+var
+  x:PosicionLista;
+  concatenado:string;
+begin
+  if not lista.esVacia then
+  begin
+    x:=inicio;
+      while x<>NULO do
+      begin
+      concatenado:=concatenado + ','+ x^.datos.ArmarString + ',';
+      x:=x^.siguiente;
+      end;
+    retornarString:=concatenado;
+  end;
 end;
 end.

@@ -154,9 +154,49 @@ begin
 end;
 
 
-Function eliminar(p:PosicionLista) : Errores;
+Function lista.eliminar(p:PosicionLista) : Errores;
+var
+  resultado:Errores;
+  posicion,anterior,siguiente:PosicionLista;
 begin
+  resultado:=CError;
+  if lista.validarPosicion(p) then
+  begin
+    if (Qitems = 0) and (p=inicio) and (p=final) then
+    begin
+        lista.crear();
+    end;
+    
+    if p=inicio then
+    begin
+      siguiente:=cursor[p].siguiente;
+      cursor[siguiente].anterior:=NULO;
+      inicio:=siguiente;
+    end;
 
+    if p=final then
+    begin
+      anterior:=cursor[p].anterior;
+      cursor[anterior].siguiente:=NULO;
+      final:=anterior;
+      Qitems:=Qitems-1;
+    end;
+    
+    if (p>inicio) and (p<final) then
+    begin
+      anterior:=cursor[p].anterior;
+      siguiente:=cursor[p].siguiente;
+      cursor[anterior].siguiente:=siguiente;
+      cursor[siguiente].anterior:=anterior;
+      Qitems:=Qitems-1;
+    end;
+    resultado:=OK;
+  end
+  else
+    resultado:=PosicionInvalida;
+    
+  eliminar:=resultado;
+  
 end;
 
 Function lista.llenarRandom(rangoHasta:longInt): Errores;
@@ -180,4 +220,20 @@ begin
   llenarRandom:=resultado;
 end;
 
+Function lista.retornarString():String;
+var
+  x:PosicionLista;
+  concatenado:string;
+begin
+  if not lista.esVacia then
+  begin
+    x:=inicio;
+      while x<>NULO do
+      begin
+      concatenado:=concatenado + ','+ cursor[x].datos.ArmarString + ',';
+      x:=cursor[x].siguiente;
+      end;
+    retornarString:=concatenado;
+  end;
+end;
 end.

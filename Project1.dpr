@@ -2,9 +2,12 @@ program Project1;
 
 uses
   System.SysUtils,
-  ListaTAD in 'ListaTAD.pas',
-  Tipos;
- // ListaTADPuntero in 'ListaTADPuntero.pas';
+  ListaArray in 'ListaArray.pas',
+  Tipos,
+  ListaCursor in 'ListaCursor.pas',
+  ListaPuntero in 'ListaPuntero.pas';
+
+// ListaTADPuntero in 'ListaTADPuntero.pas';
 
 var
  // lista:ListaTADPuntero.Lista;
