@@ -61,7 +61,7 @@ var
 begin
   x:=inicio;
   if lista.esVacia then
-    flag:=false
+    validarPosicion:=false
   else
   begin
     while (flag = false) and (x <> nulo) do
@@ -287,11 +287,22 @@ begin
 end;
 
 Function lista.ordinal(PLogica:integer):PosicionLista;
+var
+  i:integer;
+  elemento:PosicionLista;
 begin
   if lista.validarPosicion(PLogica) then
-    ordinal:=PLogica
-  else
-    ordinal:=NULO;
+  begin
+    i:=1;
+    elemento:=inicio;
+    while (i<PLogica) and (elemento<>NULO) do
+    begin
+      inc(i);
+      elemento:=elemento^.siguiente;
+    end;
+    if elemento<>NULO then
+      ordinal:=elemento;
+  end;
   
 end;
 Function lista.retornarString():String;

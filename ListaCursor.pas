@@ -309,7 +309,6 @@ end;
 
 Function lista.ordinal(PLogica:integer):PosicionLista;
 var
-  flag:boolean;
   elemento:PosicionLista;
   i:integer;
 begin
