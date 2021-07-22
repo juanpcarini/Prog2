@@ -1,4 +1,4 @@
-unit ListaTADPuntero;
+unit ListaPuntero;
 
 interface
 uses
@@ -97,33 +97,23 @@ var
   resultado:Errores;
   PL:PosicionLista;
 begin
+  resultado:=CError;
   if lista.esLlena then
-    resultado:=CError
+    resultado:=llena
   else
   begin
+    new(PL);
+    PL^.datos:=x;
+    PL^.anterior:=final;
+    PL^.siguiente:=nil;
     if lista.esVacia then
-    begin
-      new(PL);
-      PL^.datos:=x;      
-      PL^.anterior=nulo;
-      PL^.siguiente=nulo;
-      inicio:=PL;
-      final:=PL;
-      Qitems:=Qitems+1;
-      resultado:=OK;      
-    end
+      inicio:=PL
     else
-    begin
-      new(PL);
-      PL^.datos:=x;
-      PL^.anterior:=final;
-      PL^.siguiente:=nil;
       final^.siguiente:=PL;
-      final:=PL;
-      Qitems:=Qitems+1;
-      resultado:=OK;
-    end;
-    
+
+    final:=PL;
+    Qitems:=Qitems+1;
+    resultado:=OK;
   end;
   agregar:=resultado;
 end;
@@ -264,7 +254,7 @@ begin
     new(elemento);
     new(elementoSig);
     elemento:=inicio;
-    while elemento <= final do
+    while not lista.esLlena do
     begin
       x.DI:=random(rangoHasta);
       elemento^.datos:=x;
