@@ -30,7 +30,7 @@ type
     Procedure crear();                                  //.
     Function esVacia():boolean;                           //.
     Function esLlena():boolean;                              //.
-    Function agregar(x:TipoElemento) : Errores;
+    Function agregar(x:TipoElemento) : Errores;              //.
     Function retornarString():String;
     Function eliminar(p:PosicionLista) : Errores;
     Function siguiente(p:PosicionLista) : PosicionLista;        //.
@@ -148,10 +148,6 @@ begin
       cantidadElementos:=Qitems;
 end;
 
-Function retornarString():String;
-begin
-
-end;
 
 
 Function lista.eliminar(p:PosicionLista) : Errores;
@@ -180,6 +176,7 @@ begin
       cursor[anterior].siguiente:=NULO;
       final:=anterior;
       Qitems:=Qitems-1;
+      
     end;
     
     if (p>inicio) and (p<final) then
@@ -190,6 +187,11 @@ begin
       cursor[siguiente].anterior:=anterior;
       Qitems:=Qitems-1;
     end;
+    //AGREGA UNA POSICION LIBRE PARA UTILIZAR
+    posicion:=libre;
+    libre:=p;
+    cursor[libre].siguiente:=posicion;
+    
     resultado:=OK;
   end
   else
